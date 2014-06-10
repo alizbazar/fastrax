@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<head>
+<title>Fastrax Divepool Generator for 4-way formation skydiving</title>
+<meta name="description" content="Fastrax Divepool Generator is a tool for generating 4-way formation skydiving divepools for memorization and practice." />
+<meta name="keywords" content="skydiving, fs, 4-way, generator, divepool, dive pool, formation skydiving, fastrax" />
+<meta name="robots" content="index,follow" />
+<meta charset="UTF-8">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="400">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui, user-scalable=no">
+<meta property="og:title" content="Fastrax Divepool Generator for 4-way formation skydiving" />
+<meta property="og:description" content="Fastrax Divepool Generator is a tool for generating 4-way formation skydiving divepools for memorization and practice." />
+<meta property="og:image" content="http://tools.alizweb.com/fastrax/thumb.jpg" />
+<link href="favicon.ico" rel="icon" type="image/x-icon" />
+<link type="text/css" href="ui/css/ui-lightness/jquery-ui-1.8.7.custom.css" rel="stylesheet" />
+<script type="text/javascript" src="ui/js/jquery-1.4.4.min.js"></script>
+<script type="text/javascript" src="jquery.shuffle.js"></script>
+<script type="text/javascript" src="jquery.random.js"></script>
+<script type="text/javascript" src="ui/js/jquery-ui-1.8.7.custom.min.js"></script>
+<script>
+var files = {
+    "randoms": [
+        {"file": 'randoms/randomA.jpg', "name": "A - Unipod"},
+        {"file": 'randoms/randomB.jpg', "name": "B - Stairstep Diamond"},
+        {"file": 'randoms/randomC.jpg', "name": "C - Murphy Flake"},
+        {"file": 'randoms/randomD.jpg', "name": "D - Yuan"},
+        {"file": 'randoms/randomE.jpg', "name": "E - Meeker"},
+        {"file": 'randoms/randomF.jpg', "name": "F - Open Accordian"},
+        {"file": 'randoms/randomG.jpg', "name": "G - Cataccord"},
+        {"file": 'randoms/randomH.jpg', "name": "H - Bow"},
+        {"file": 'randoms/randomJ.jpg', "name": "J - Donut"},
+        {"file": 'randoms/randomK.jpg', "name": "K - Hook"},
+        {"file": 'randoms/randomL.jpg', "name": "L - Adder"},
+        {"file": 'randoms/randomM.jpg', "name": "M - Star"},
+        {"file": 'randoms/randomN.jpg', "name": "N - Crank"},
+        {"file": 'randoms/randomO.jpg', "name": "O - Satellite"},
+        {"file": 'randoms/randomP.jpg', "name": "P - Sidebody"},
+        {"file": 'randoms/randomQ.jpg', "name": "Q - Phalanx"}
+    ],
+    "blocks": [
+        {"file": 'blocks/Block01.html', "name": "1 (Snowflake -&gt; Offset)", intermediate: false},
+        {"file": 'blocks/Block02.html', "name": "2 (Side Body Donut -&gt; Side Flake Donut)", intermediate: true},
+        {"file": 'blocks/Block03.html', "name": "3 (Side Flake Opal -&gt; Turf)", intermediate: false},
+        {"file": 'blocks/Block04.html', "name": "4 (Monopod -&gt; Monopod)", intermediate: true},
+        {"file": 'blocks/Block05.html', "name": "5 (Opal -&gt; Opal)", intermediate: false},
+        {"file": 'blocks/Block06.html', "name": "6 (Stardian -&gt; Stardian)", intermediate: true},
+        {"file": 'blocks/Block07.html', "name": "7 (Side Buddies -&gt; Side Buddies)", intermediate: true},
+        {"file": 'blocks/Block08.html', "name": "8 (Canadian Tee -&gt; Canadian Tee)", intermediate: true},
+        {"file": 'blocks/Block09.html', "name": "9 (Cat Accordian -&gt; Cat Accordian)", intermediate: true},
+        {"file": 'blocks/Block10.html', "name": "10 (Diamond -&gt; Bunyip)", intermediate: false},
+        {"file": 'blocks/Block11.html', "name": "11 (Photon -&gt; Photon)", intermediate: true},
+        {"file": 'blocks/Block12.html', "name": "12 (Bundy -&gt; Bundy)", intermediate: false},
+        {"file": 'blocks/Block13.html', "name": "13 (Hammer -&gt; Hammer)", intermediate: true},
+        {"file": 'blocks/Block14.html', "name": "14 (Bipole -&gt; Bipole)", intermediate: true},
+        {"file": 'blocks/Block15.html', "name": "15 (Caterpiller -&gt; Caterpiller)", intermediate: true},
+        {"file": 'blocks/Block16.html', "name": "16 (Compressed Accordian -&gt; Box)", intermediate: false},
+        {"file": 'blocks/Block17.html', "name": "17 (Danish Tee -&gt; Murphy)", intermediate: false},
+        {"file": 'blocks/Block18.html', "name": "18 (Zircon -&gt; Zircon)", intermediate: true},
+        {"file": 'blocks/Block19.html', "name": "19 (Ritz -&gt; Icepick)", intermediate: true},
+        {"file": 'blocks/Block20.html', "name": "20 (Piver -&gt; Viper)", intermediate: true},
+        {"file": 'blocks/Block21.html', "name": "21 (Zig-Zag -&gt; Marquis)", intermediate: true},
+        {"file": 'blocks/Block22.html', "name": "22 (Tee -&gt; Chinese Tee)", intermediate: true}
+        
+    ]};
+	$(function() {
+		$( "#no_blocks" ).slider({
+			value:0,
+			min: 0,
+			max: 5,
+			step: 1,
+			slide: function( event, ui ) {
+				$( "#blocks" ).val( ui.value );
+			}
+		});
+        
+		$( "#no_randoms" ).slider({
+			value: 3,
+			min: 0,
+			max: 5,
+			step: 1,
+			slide: function( event, ui ) {
+				$( "#randoms" ).val( ui.value );
+			}
+		});
+        
+		$( "#randoms" ).val( $( "#no_randoms" ).slider( "value" ) );
+		$( "#blocks" ).val( $( "#no_blocks" ).slider( "value" ) );
+        
+        $("input[name='generate']").button().click(function() {
+            var combination = $('#combination').val();
+            if (combination) {
+                generateCombination(combination);
+            } else {
+                generateResult($( "#randoms" ).val(), $( "#blocks" ).val());
+            }
+            scrollToResult();
+        });
+        generateResult($( "#randoms" ).val(), $( "#blocks" ).val());
+        
+        
+        $("button[name='practiseBlocks']").button().click(function() {
+            practise('blocks');
+            scrollToResult();
+        });
+        
+        
+        $("button[name='practiseRandoms']").button().click(function() {
+            practise('randoms');
+            scrollToResult();
+        });
+
+        function scrollToResult() {
+            if (window.innerWidth <= 1000) {
+                $('html, body').animate({
+                    scrollTop: $("#result").offset().top
+                }, 500);
+            }
+        }
+        
+        $("#selectors > form").submit(function() {
+            return false;
+        });
+
+        var hash = window.location.hash;
+        if (hash && hash.length > 1) {
+            generateCombination(hash.substring(1));
+        }
+	});
+    
+    var previous;
+    var previous_ones = {"score": 0};
+    function practise(what) {
+        var result_form = $('<form>');
+        result_form.submit(function() {
+            return false;
+        });
+        $("#result").html(result_form);        
+        var subject = $('<div id="subject"></div>');
+        var container = $('<div class="game"><div class="'+what+'Overlay"></div></div>');
+        container.append(subject);
+        result_form.append(container);
+        var answers = $('<div class="answers"></div>');
+        result_form.append(answers);
+        previous = null;
+        previous_ones = {"score": 0};
+        var button = $('<input type="submit" name="next" value="Next!" />');
+        button.button();
+        result_form.append(button);
+        button.click(function() {
+            play(what, subject, answers);
+        });
+        play(what, subject, answers);
+    }
+
+    function play(what, subject, answers) {
+        $("."+what+"Overlay").css('display', 'inline');
+        answers.html('');
+        var inQuestion;
+        var used = {};
+        var max = 0;
+        do {
+            inQuestion = $.randomBetween(max, (files[what].length - 1));
+        } while(previous_ones.hasOwnProperty(inQuestion) && ++max < files[what].length);
+        if (max >= files[what].length) {
+            for (var i=0; i < files[what].length; i++) {
+                if (!previous_ones.hasOwnProperty(i)) {
+                    inQuestion = i;
+                    break;
+                }
+            }
+            if (i === files[what].length) {
+                var word;
+                if (previous_ones.score === files[what].length) {
+                    word = "Fantastic!!!";
+                } else {
+                    word = "Congratulations!";
+                }
+                alert("You made it through all the "+what+"!\nYour score is: "
+                        +previous_ones.score+'/'+files[what].length + "\n"
+                        +word);
+                previous_ones = {"score": 0};
+                inQuestion = $.randomBetween(0, (files[what].length - 1));
+            }
+        }
+        if (what === 'blocks') {
+            embedAnimation(files[what][inQuestion].file, $('#subject'), "400", "407");
+        } else if (what === 'randoms') {
+        subject.html('<img src="' + files['randoms'][inQuestion].file + '" width="400" />');
+        }
+        var choise;
+        var choises = [];
+        for (var i=0; i < 4; i++) {
+            do {
+                choise = $.randomBetween(0, (files[what].length - 1));
+            } while (used[choise] || choise === inQuestion);
+            choises.push('<input type="radio" name="answer" id="answer_'+choise+'" value="'+choise+'" /> <label for="answer_'+choise+'">'+files[what][choise].name+'</label><br />');
+            used[choise] = true;
+        }
+        choises.push('<input type="radio" name="answer" id="answer_'+inQuestion+'" value="'+inQuestion+'" /> <label for="answer_'+inQuestion+'">'+files[what][inQuestion].name+'</label><br />');
+        choises = $.shuffle(choises);
+        
+        answers.append('<h3>Choose one:</h3>');
+        for (var i=0; i<choises.length;i++) {
+            answers.append(choises[i]);
+        }
+        previous = inQuestion;
+        previous_ones[inQuestion] = true;
+        $("input[name='answer']", answers).click(function() {
+            $("label[for='answer_"+window.previous+"']").css('background', '#109f16');
+            var madeChoise = $(this).val();
+            if (madeChoise != window.previous) {
+                $("label[for='answer_"+madeChoise+"']").css('background', '#d30000');
+            } else {
+                previous_ones.score++;
+            }
+            $("."+what+"Overlay").css('display', 'none');
+        });
+
+    }
+
+    //+ Jonas Raoni Soares Silva
+    //@ http://jsfromhell.com/array/shuffle [v1.0]
+
+    function shuffle(o) { //v1.0
+    	for(var j, x, i = o.length; i; j = parseInt(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+    	return o;
+    }
+
+    function generateResult(no_randoms, no_blocks) {
+        $("#result").html('').append('<div id="generated_pics"></div>');
+        var inQuestion;
+        var result = [];
+        var intermediateOnly = $('#intermediate').is(':checked');
+        if (no_randoms > 0) {
+            var used_randoms = {};
+            for (var i = 0; i < no_randoms; i++) {
+                do {
+                    inQuestion = $.randomBetween(0, (files.randoms.length - 1));
+                } while(used_randoms[inQuestion]);
+                result.push(files.randoms[inQuestion]);
+                used_randoms[inQuestion] = true;
+            }
+        }
+        if (no_blocks > 0) {
+            var used_blocks = {};
+            for (var i = 0; i < no_blocks; i++) {
+                do {
+                    inQuestion = $.randomBetween(0, (files.blocks.length - 1));
+                } while(used_blocks[inQuestion] || (intermediateOnly && !files.blocks[inQuestion].intermediate));
+                result.push(files.blocks[inQuestion]);
+                used_blocks[inQuestion] = true;
+            }
+        }
+        shuffle(result);
+        embedResult(result);
+    }
+
+    function embedAnimation(url, container, w, h, name) {
+        if (window.innerWidth < w) {
+            w = window.innerWidth;
+            h = w + 7;
+        }
+        var iframe = $('<iframe>').attr('src', url).css({width: w, height: h});
+        container.html(iframe);
+        if (name) {
+            container.append('<h2>' + name + '</h2>');
+        }
+    }
+
+    function embedResult(pieces) {
+        var block_id, piece;
+        var div = $('#generated_pics');
+        for (var i=0, max=pieces.length; i < max; i++) {
+            piece = pieces[i];
+            block_id = getId(piece);
+            if (isBlock(piece)) {
+                var el = $('<div id="'+block_id+'"></div>').appendTo(div);
+                embedAnimation(piece.file, el, "300", "305", piece.name);
+            } else {
+                div.append('<img src="' + piece.file + '" />');
+            }
+        }
+    }
+
+    function isNumber(n) {
+      return !isNaN(parseFloat(n)) && isFinite(n);
+    }
+
+    function isBlock(piece) {
+        return isNumber(piece['name'][0]);
+    }
+
+    function getId(piece) {
+        if (isBlock(piece)) {
+            return piece.file.substring(7, 14).toLowerCase();
+        } else {
+            return piece.file.substring(8, 15).toLowerCase();
+        }
+    }
+
+    function getPiece(piece) {
+        var stack;
+        if (isNumber(piece)) {
+            stack = files.blocks;
+        } else {
+            stack = files.randoms;
+        }
+        for (var i=0, max=stack.length; i<max; i++) {
+            if (stack[i]['name'].indexOf(piece + ' ') === 0) {
+                return stack[i];
+            }
+        }
+        return null;
+    }
+
+    function generateCombination(what) {
+        $("#result").html('').append('<div id="generated_pics"></div>')
+        var pieces = what.split('-'),
+            result = [],
+            piece;
+        for (var i=0, max=pieces.length; i < max; i++) {
+            piece = getPiece(pieces[i]);
+            result.push(piece);
+        }
+        embedResult(result);
+    }
+</script>
+<style>
+body {
+	background: black;
+	font-family: "Lucida Grande", "Arial", "Helvetica", "Verdana", "sans-serif"; */
+	font-family: "Arial", "Helvetica", "Verdana", "sans-serif";
+	font-size: 12px;
+    color: #efefef;
+    text-align: center;
+}
+
+#selectors {
+    width: 220px;
+    float: left;
+    text-align: left;
+}
+
+.randomsOverlay, .blocksOverlay {
+    position: absolute;
+    background: black url('block_overlay.png') no-repeat left 41px;
+    z-index: 10;
+    width: 400px;
+    height: 87px;
+}
+
+.ui-widget {
+    width: 170px;
+    margin-top: 10px;
+}
+
+#result {
+    float:left;
+    width: 780px;
+    font-size: 18px;
+    text-align: left;
+}
+
+#generated_pics img {
+    padding-bottom: 9px;
+}
+
+#generated_pics > div {
+    position: relative;
+}
+
+#generated_pics div h2 {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    text-align: center;
+    font-style: italic;
+    font-size: 100%;
+    margin-top: 9px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+#generated_pics img,
+#generated_pics div {
+    display: inline-block;
+    margin: 10px;
+}
+
+#customCombination {
+    margin-top: 10px;
+}
+
+.game {
+width: 420px;
+float: left;
+}
+
+.game object {
+    clear: both;
+    display: block;    
+}
+
+.answers {
+    margin-top: 80px;
+    margin-bottom: 20px;
+}
+
+#page_container {
+    width: 1000px;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+form {
+    margin: 0;
+    width: 100%;
+    border: 1px solid black;
+    padding: 0;
+}
+
+iframe {
+    border: 0;
+    background-color: black;
+}
+
+@media (max-width: 1000px) {
+    #page_container {
+        width: auto;
+        margin-left: -8px;
+    }
+
+    #selectors, #generated_pics {
+        float: none;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    #result {
+        width: auto;
+        float: none;
+    }
+
+    #result form {
+        max-width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    #result .game, #result .answers {
+        float: none;
+    }
+
+    #result .answers {
+        margin-top: 20px;
+    }
+
+    #selectors {
+        max-width: 360px;
+        transform: scale(1.3);
+        -moz-transform: scale(1.3);
+        -ms-transform: scale(1.3);
+        -webkit-transform: scale(1.3);
+        border: 0;
+        margin-top: 80px;
+        margin-bottom: 80px;
+    }
+
+    #generated_pics {
+        max-width: 320px;
+    }
+
+    #subject img {
+        max-width: 320px;
+    }
+}
+
+#footer {
+    clear:both;
+    padding-top: 20px;
+}
+
+#footer a {
+    color: orange;
+}
+</style>
+
+</head>
+<body>
+    <div id="page_container">
+        <div id="selectors">
+            <h1>4-way Divepool Generator</h1>
+            <form>
+            <div id="jump">
+            <p>
+                <label for="randoms">No of Randoms:</label><br />
+                <input type="text" id="randoms" style="border:0; color:#f6931f; font-weight:bold;" />
+            </p>
+            <div id="no_randoms"></div>
+                
+            <p>
+                <label for="blocks">No of Blocks:</label><br />
+                <input type="text" id="blocks" style="border:0; color:#f6931f; font-weight:bold;" />
+            </p>
+            <div id="no_blocks"></div>
+
+            <div id="customCombination">
+                <label for="combination">Specific combination:</label><br />
+                <input type="text" id="combination" placeholder="for ex. B-C-12" />
+            </div>
+
+            <input type="submit" name="generate" value="Generate!" />
+            </div>
+            <div id="practise">
+            <button name="practiseBlocks">Practise memorizing Blocks!</button>
+            <button name="practiseRandoms">Practise memorizing Randoms!</button>
+            </div>
+            <input type="checkbox" id="intermediate" /><label for="intermediate">Intermediate only</label>
+            </form>
+        </div>
+        <div id="result"><div id="generated_pics"><img src="randoms/randomA.jpg" title="Random A" /></div></div>
+    </div>
+    <div id="footer"><img src="http://tools.alizweb.com/counter/graphcount.php?page=fastrax&style=invisible" />&copy; <em>2011 Albert Nazander</em> &amp; <a href="http://www.teamfastrax.org/divepool.aspx"><em>Team Fastrax</em></a></div>
+    <script type="text/javascript">
+
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-20686113-1']);
+    _gaq.push(['_setDomainName', '.alizweb.com']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+
+    </script>
+</body>
+</html>
